@@ -582,22 +582,24 @@ void display(GLFWwindow* window, double currentTime) {
 	updateLightingUniforms(renderingProgram2, r, currentTime);
 	updateLightingUniforms(renderingProgram3, r, currentTime);
 
-	glUseProgram(lightSphereProgram);
+	if (lightingEnabled) {
+		glUseProgram(lightSphereProgram);
 
-	glm::mat4 sphereModel = glm::translate(glm::mat4(1.0f), lightPos);
-	sphereModel = glm::scale(sphereModel, glm::vec3(0.25f)); // átmérő = 0.5
+		glm::mat4 sphereModel = glm::translate(glm::mat4(1.0f), lightPos);
+		sphereModel = glm::scale(sphereModel, glm::vec3(0.25f)); // átmérő = 0.5
 
-	glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "model"), 1, GL_FALSE, glm::value_ptr(sphereModel));
-	glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "model"), 1, GL_FALSE, glm::value_ptr(sphereModel));
+		glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(lightSphereProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-	// A szín legyen megegyező a világítással (pl. warmLight)
-	glm::vec3 warmLightColor = glm::vec3(1.0f, 0.55f, 0.1f);
-	glUniform3fv(glGetUniformLocation(lightSphereProgram, "color"), 1, glm::value_ptr(warmLightColor));
+		glm::vec3 warmLightColor = glm::vec3(1.0f, 0.55f, 0.1f);
+		glUniform3fv(glGetUniformLocation(lightSphereProgram, "color"), 1, glm::value_ptr(warmLightColor));
 
-	glBindVertexArray(sphereVAO);
-	glDrawElements(GL_TRIANGLES, sphereIndexCount, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+		glBindVertexArray(sphereVAO);
+		glDrawElements(GL_TRIANGLES, sphereIndexCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
 
 }
 
